@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Sekolahku</string>
+    <string-array name="daftar_education">
+        <item>Tk</item>
+        <item>Sd</item>
+        <item>Smp</item>
+        <item>SMA</item>
+    </string-array>
+</resources>
