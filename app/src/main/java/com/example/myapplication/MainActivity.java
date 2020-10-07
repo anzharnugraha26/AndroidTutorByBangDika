@@ -50,6 +50,25 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         Toast.makeText( this, message, Toast.LENGTH_SHORT).show();
     }
 
+    private void loadDetailDataSiswa(long idSiswa){
+        try {
+            DatabaseHelper databaseHelper = new DatabaseHelper(this);
+            SiswaDataSource dataSource = new SiswaDataSource(databaseHelper);
+            Siswa siswa = dataSource.findById(idSiswa);
+            etNamaDepan.setText(siswa.getNamaDepan());
+            etNamaBelakang.setText(siswa.getNamaBelakang());
+            etNoHandphone.setText(siswa.getPhoneNumber());
+            tglLahirEt.setText(siswa.getTanggallahir());
+            etEmail.setText(siswa.getEmail());
+            etAlamat.setText(siswa.getAlamat());
+            showToast("Data Siswa Berhasil");
+        } catch (Exception e){
+            showToast(e.getMessage());
+        }
+    }
+
+
+
     private void save(){
         String inputNamaDepan = etNamaDepan.getText().toString().trim();
         String inputNamaBelakang = etNamaBelakang.getText().toString().trim();
@@ -78,8 +97,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         String joinHobi = TextUtils.join(",", selectedHobies);
 
         String selectEducation = educationSp.getSelectedItem().toString();
-
-
 
         Siswa siswa =new Siswa();
         siswa.setNamaDepan(inputNamaDepan);
@@ -164,6 +181,15 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 showDatePickerDialog();
             }
         });
+
+        long receivedSiswa = getIntent().getLongExtra("id_siswa", -1);
+
+
+        if (receivedSiswa == -1){
+            showToast("Tidak menerima data siswa");
+        } else {
+            loadDetailDataSiswa(receivedSiswa);;
+        }
 
 
 

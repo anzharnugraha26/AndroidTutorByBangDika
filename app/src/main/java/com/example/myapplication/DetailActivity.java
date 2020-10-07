@@ -86,7 +86,7 @@ public class DetailActivity extends AppCompatActivity {
         if (receivedSiswa == -1){
             showToast("Tidak menerima data siswa");
         } else {
-            loadDetailDataSiswa(receivedSiswa);
+            loadDetailDataSiswa(receivedSiswa);;
         }
 
     }

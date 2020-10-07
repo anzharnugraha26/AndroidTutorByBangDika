@@ -35,7 +35,7 @@ public class ListMainActivity extends AppCompatActivity {
     }
 
     private void starDetailActivity(int position) {
-        Intent intent = new Intent(this, DetailActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
 
         Siswa selectedSiswa = adapter.getItem(position);
         intent.putExtra("id_siswa", selectedSiswa.getId());
