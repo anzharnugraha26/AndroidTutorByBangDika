@@ -41,7 +41,7 @@ public class DetailActivity extends AppCompatActivity {
 
             gender.setText(siswa.getGender());
 
-            jenjang.setText(siswa.getGender());
+            jenjang.setText(siswa.getEducation());
 
             hobi.setText(siswa.getHoby());
 

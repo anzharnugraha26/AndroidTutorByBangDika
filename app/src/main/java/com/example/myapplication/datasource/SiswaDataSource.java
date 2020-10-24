@@ -3,6 +3,9 @@ package com.example.myapplication.datasource;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import androidx.core.content.res.FontResourcesParserCompat;
+
 import com.example.myapplication.model.Siswa;
 
 import java.util.ArrayList;
@@ -56,12 +59,6 @@ public void save ( Siswa siswa){
 
 
 
-//public Siswa getSiswa (long id) {
-//     String sql = databaseHelper.getReadableDatabase();
-//     Cursor cursor = databaseHelper.rawQuery()
-//}
-
-
 public List<Siswa> getAll() {
 
      SQLiteDatabase database = databaseHelper.getReadableDatabase();
@@ -100,8 +97,42 @@ public Siswa findById(Long id){
         throw new RuntimeException("Data siswa dengan id" + id + "tidak di temukan");
     }
 
-
 }
+
+//    public List<Siswa> search (String keyword){
+//     List<Siswa> siswas = new ArrayList<>();
+//     String sql = "SELECT *FROM siswa WHERE" + "namaDepan LIKE ? OR namaBelakang LIKE?";
+//
+//    SQLiteDatabase database = databaseHelper.getReadableDatabase();
+//            Cursor cursor = database.rawQuery(sql, new String[]{"%","%" + keyword + "%"});
+//            cursor.moveToFirst();
+//
+//            while (!cursor.isAfterLast()){
+//
+//                siswas.add(siswa);
+//
+//                cursor.moveToNext();
+//            }
+//
+//            return siswas;
+//    }
+
+    public void removeSiswa (Siswa siswa) {
+            SQLiteDatabase database =databaseHelper.getWritableDatabase();
+            int id = database.delete("siswa", "id=?",
+                        new String[]{Long.toString(siswa.getId())});
+    }
+
+
+    public void update (Siswa siswa){
+        SQLiteDatabase database = databaseHelper.getWritableDatabase();
+        ContentValues contentValues = convertToContentvalues(siswa);
+        database.update("siswa" , contentValues, "id=?" , new String[]{
+                        String.valueOf(siswa.getId())
+        });
+        database.close();
+    }
+
 
 
 }

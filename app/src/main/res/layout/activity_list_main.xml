@@ -8,6 +8,15 @@
     android:padding="10dp"
     tools:context=".ListMainActivity">
 
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_view"
+        android:layout_margin="8dp"
+        android:iconifiedByDefault="false"
+        android:queryHint="Cari Siswa"
+        />
+
     <ListView
         android:id="@+id/siswaLv"
         android:layout_width="match_parent"

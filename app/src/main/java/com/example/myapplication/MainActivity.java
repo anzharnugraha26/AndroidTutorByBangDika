@@ -9,12 +9,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.example.myapplication.datasource.DatabaseHelper;
@@ -44,6 +46,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     private CheckBox cbMenulis;
     private CheckBox cbMenggambar;
     private EditText etAlamat;
+    private Button btnUpdate;
+
+
+    private Siswa receivedSiswa;
 
 
     private void showToast(String message) {
@@ -54,13 +60,34 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         try {
             DatabaseHelper databaseHelper = new DatabaseHelper(this);
             SiswaDataSource dataSource = new SiswaDataSource(databaseHelper);
-            Siswa siswa = dataSource.findById(idSiswa);
-            etNamaDepan.setText(siswa.getNamaDepan());
-            etNamaBelakang.setText(siswa.getNamaBelakang());
-            etNoHandphone.setText(siswa.getPhoneNumber());
-            tglLahirEt.setText(siswa.getTanggallahir());
-            etEmail.setText(siswa.getEmail());
-            etAlamat.setText(siswa.getAlamat());
+            receivedSiswa = dataSource.findById(idSiswa);
+
+            etNamaDepan.setText(receivedSiswa.getNamaDepan());
+            etNamaBelakang.setText(receivedSiswa.getNamaBelakang());
+            etNoHandphone.setText(receivedSiswa.getPhoneNumber());
+            etAlamat.setText(receivedSiswa.getAlamat());
+            etEmail.setText(receivedSiswa.getEmail());
+            tglLahirEt.setText(receivedSiswa.getTanggallahir());
+
+            String gender = receivedSiswa.getGender();
+            int selectedId = (gender.equals("Pria")) ? R.id.priaRb : R.id.wanitaRb;
+            genderRb.check(selectedId);
+
+            String hobi = receivedSiswa.getHoby();
+            cbMembaca.setChecked(hobi.contains("Membaca"));
+            cbMenulis.setChecked(hobi.contains("Menulis"));
+            cbMenggambar.setChecked(hobi.contains("Menggambar"));
+
+            SpinnerAdapter adapter = educationSp.getAdapter();
+            if (adapter instanceof ArrayAdapter){
+                int position =  ((ArrayAdapter) adapter).getPosition(receivedSiswa.getEducation());
+                educationSp.setSelection(position);
+            }
+
+            btnUpdate.setText("Update");
+
+
+
             showToast("Data Siswa Berhasil");
         } catch (Exception e){
             showToast(e.getMessage());
@@ -68,8 +95,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
 
-
-    private void save(){
+    private void initDataSiswa(Siswa siswa){
         String inputNamaDepan = etNamaDepan.getText().toString().trim();
         String inputNamaBelakang = etNamaBelakang.getText().toString().trim();
         String inputNoHandphone = etNoHandphone.getText().toString().trim();
@@ -79,9 +105,9 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
         String selectedGender;
         if (genderRb.getCheckedRadioButtonId()== R.id.priaRb) {
-                selectedGender = "Pria" ;
+            selectedGender = "Pria" ;
         } else{
-                selectedGender = "wanita" ;
+            selectedGender = "wanita" ;
         }
 
         List<String> selectedHobies = new ArrayList<>();
@@ -98,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
         String selectEducation = educationSp.getSelectedItem().toString();
 
-        Siswa siswa =new Siswa();
+
         siswa.setNamaDepan(inputNamaDepan);
         siswa.setNamaBelakang(inputNamaBelakang);
         siswa.setPhoneNumber(inputNoHandphone);
@@ -109,7 +135,11 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         siswa.setHoby(joinHobi);
         siswa.setAlamat(inputAlamat);
 
+    }
 
+    private void addNewSiswa(){
+        Siswa siswa = new Siswa();
+        initDataSiswa(siswa);
         try{
             DatabaseHelper databaseHelper = new DatabaseHelper(this);
             SiswaDataSource dataSource = new SiswaDataSource(databaseHelper);
@@ -120,7 +150,31 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             showToast(e.getMessage());
         }
 
+    }
 
+    private void updateSiswa(){
+        initDataSiswa(receivedSiswa);
+
+        try {
+            DatabaseHelper databaseHelper = new DatabaseHelper(this);
+            SiswaDataSource datasource = new SiswaDataSource(databaseHelper);
+            datasource.update(receivedSiswa);
+            showToast("SUKSES");
+//            Agar automatic ke form
+            finish();
+        } catch (Exception e) {
+            showToast(e.getMessage());
+        }
+
+    }
+
+
+    private void save(){
+        if (receivedSiswa != null) {
+            updateSiswa();
+        } else {
+            addNewSiswa();
+        }
 
 //        showToast("Hi, " + siswa.getNamaDepan() + "" + siswa.getNamaBelakang() + "\n"
 //            +"Phone Number :" + siswa.getPhoneNumber() + "\n" +
@@ -166,6 +220,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         cbMenulis = findViewById(R.id.cbMenulis);
         cbMenggambar = findViewById(R.id.cbMenggambar);
         etAlamat = findViewById(R.id.etAlamat);
+        btnUpdate = findViewById(R.id.saveBtn);
 
            Button saveBtn = findViewById(R.id.saveBtn);
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -189,6 +244,13 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             showToast("Tidak menerima data siswa");
         } else {
             loadDetailDataSiswa(receivedSiswa);;
+        }
+
+        long receivedIdSiswa = getIntent().getLongExtra("id siswa", -1);
+        if(receivedIdSiswa == -1){
+                    showToast("Tidak Menerima Data Siswa");
+        } else {
+            loadDetailDataSiswa(receivedIdSiswa);
         }
 
 

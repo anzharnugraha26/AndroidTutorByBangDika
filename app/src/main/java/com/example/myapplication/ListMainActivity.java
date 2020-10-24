@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -80,6 +81,11 @@ public class ListMainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+//    private void deleteSiswa (Siswa siswa){
+//        SiswaDataSource.open();
+//
+//    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int selectedMenuId = item.getItemId();
@@ -95,6 +101,26 @@ public class ListMainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_list_activity, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+
+//    @Override
+//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+//        getMenuInflater().inflate(R.menu.menu_context, menu);
+//        super.onCreateContextMenu(menu, v, menuInfo);
+//    }
+
+    @Override
+    public boolean onContextItemSelected( MenuItem item) {
+        int id = item.getItemId();
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (id){
+            case R.id.action_delete:
+                break;
+        }
+
+
+        return super.onContextItemSelected(item);
     }
 
     @Override
