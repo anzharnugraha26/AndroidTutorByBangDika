@@ -35,8 +35,20 @@ public class ListMainActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    private void starDetailActivity(int position) {
+
+    private void starFormDetailActivity(int position) {
         Intent intent = new Intent(this, MainActivity.class);
+
+        Siswa selectedSiswa = adapter.getItem(position);
+        intent.putExtra("id_siswa", selectedSiswa.getId());
+
+        startActivity(intent);
+    }
+
+
+
+    private void starDetailActivity(int position) {
+        Intent intent = new Intent(this, DetailActivity.class);
 
         Siswa selectedSiswa = adapter.getItem(position);
         intent.putExtra("id_siswa", selectedSiswa.getId());
@@ -104,18 +116,23 @@ public class ListMainActivity extends AppCompatActivity {
     }
 
 
-//    @Override
-//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-//        getMenuInflater().inflate(R.menu.menu_context, menu);
-//        super.onCreateContextMenu(menu, v, menuInfo);
-//    }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        getMenuInflater().inflate(R.menu.menu_context, menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
 
     @Override
     public boolean onContextItemSelected( MenuItem item) {
         int id = item.getItemId();
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int selectedPosition = info.position;
+
         switch (id){
             case R.id.action_delete:
+                break;
+            case R.id.action_edit:
+                starFormDetailActivity(selectedPosition);
                 break;
         }
 
@@ -129,6 +146,8 @@ public class ListMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_main);
 
         siswaLv = findViewById(R.id.siswaLv);
+
+        registerForContextMenu(siswaLv);
 
 //        loadDataSiswa();
     }
